@@ -13,7 +13,7 @@ const {
   removeImage,
 } = require("../controllers/product");
 const { adminCheck, authCheck } = require("../middlewares/authCheck");
-//@ENDPOINT http://localhost:5002/api/product
+//@ENDPOINT https://clickbuy-api.vercel.app/api/product
 router.post("/product", create);
 router.get("/products/:count", list);
 router.get("/product/:id", read);
