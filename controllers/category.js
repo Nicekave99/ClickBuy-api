@@ -2,7 +2,6 @@ const prisma = require("../config/prisma");
 
 exports.create = async (req, res) => {
   try {
-    // code
     const { name } = req.body;
     const category = await prisma.category.create({
       data: {
@@ -15,6 +14,7 @@ exports.create = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
 exports.list = async (req, res) => {
   try {
     const category = await prisma.category.findMany();
@@ -26,6 +26,26 @@ exports.list = async (req, res) => {
     });
   }
 };
+
+exports.update = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name } = req.body;
+    const category = await prisma.category.update({
+      where: {
+        id: Number(id),
+      },
+      data: {
+        name,
+      },
+    });
+    res.send(category);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
 exports.remove = async (req, res) => {
   try {
     const { id } = req.params;
