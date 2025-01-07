@@ -290,29 +290,30 @@ exports.removeImage = async (req, res) => {
 exports.searchProducts = async (req, res) => {
   try {
     const { keyword } = req.params;
+    console.log("Keyword:", keyword); // ตรวจสอบค่า keyword ที่ส่งมา
 
+    // ค้นหาจาก title โดยใช้ Prisma Query
     const products = await prisma.product.findMany({
       where: {
         title: {
-          contains: keyword, // ค้นหาคำที่อยู่ใน title
-          mode: "insensitive", // ไม่สนใจตัวพิมพ์เล็ก-ใหญ่
+          contains: keyword, // ค้นหาคำใน title
+          mode: "insensitive", // ไม่สนใจตัวพิมพ์เล็ก/ใหญ่
         },
       },
       include: {
-        images: true, // รวมข้อมูลรูปภาพ
-        category: true, // รวมข้อมูลหมวดหมู่สินค้า
+        category: true, // เพิ่มหมวดหมู่สินค้า
       },
     });
 
-    if (products.length === 0) {
-      return res.status(404).json({ message: "No products found" });
+    if (!products.length) {
+      return res
+        .status(404)
+        .json({ message: `No products found for "${keyword}"` });
     }
 
     res.status(200).json(products);
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
+    console.error("Error:", error);
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
-
-
