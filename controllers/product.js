@@ -186,6 +186,7 @@ const handleQuery = async (req, res, query) => {
       where: {
         title: {
           contains: query,
+          mode: "insensitive",
         },
       },
       include: {
