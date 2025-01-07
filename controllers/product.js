@@ -286,3 +286,15 @@ exports.removeImage = async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
+exports.searchProducts = async (req, res) => {
+  try {
+    const { keyword } = req.params;
+    const regex = new RegExp(keyword, "i"); //
+    const products = await Product.find({ title: regex }); //
+    res.status(200).json(products);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server Error" });
+  }
+};
