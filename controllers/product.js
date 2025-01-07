@@ -286,3 +286,33 @@ exports.removeImage = async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
+exports.searchProducts = async (req, res) => {
+  try {
+    const { keyword } = req.params;
+
+    const products = await prisma.product.findMany({
+      where: {
+        title: {
+          contains: keyword, // ค้นหาคำใน title
+          mode: "insensitive", // ไม่สนใจตัวพิมพ์เล็ก-ใหญ่
+        },
+      },
+      include: {
+        images: true, // รวมข้อมูลรูปภาพ
+        category: true, // รวมข้อมูลหมวดหมู่สินค้า
+      },
+    });
+
+    if (!products.length) {
+      return res
+        .status(404)
+        .json({ message: `No products found for "${keyword}"` });
+    }
+
+    res.status(200).json(products);
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
