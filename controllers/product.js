@@ -286,3 +286,30 @@ exports.removeImage = async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
+const searchProducts = async (req, res) => {
+  try {
+    const { keyword } = req.params;
+
+    // ค้นหา keyword ในชื่อสินค้า หรือคำอธิบายสินค้า
+    const products = await Product.find({
+      $or: [
+        { title: { $regex: keyword, $options: "i" } }, // ค้นหาในชื่อสินค้า (ไม่สนตัวพิมพ์เล็ก/ใหญ่)
+        { description: { $regex: keyword, $options: "i" } }, // ค้นหาในคำอธิบายสินค้า
+      ],
+    });
+
+    if (!products.length) {
+      return res.status(404).json({ message: "No products found" });
+    }
+
+    res.status(200).json(products);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error searching for products" });
+  }
+};
+
+module.exports = {
+  searchProducts,
+};
