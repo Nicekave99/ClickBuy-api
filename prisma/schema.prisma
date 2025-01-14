@@ -37,7 +37,7 @@ model Product {
   category    Category?        @relation(fields: [categoryId], references: [id])
   cartItems   ProductOnCart[]
   orderItems  ProductOnOrder[]
-  filters     ProductFilter[] // เก็บค่าที่เลือกจากตัวกรองสำหรับสินค้า
+  filters     ProductFilter[]
 }
 
 model Order {
@@ -69,17 +69,17 @@ model Category {
   id        Int       @id @default(autoincrement())
   name      String
   products  Product[]
-  filters   Filter[] // ตัวกรองที่เกี่ยวข้องกับหมวดหมู่นี้
+  filters   Filter[]
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 }
 
 model Filter {
   id            Int             @id @default(autoincrement())
-  name          String // ชื่อของตัวกรอง เช่น "Brand", "Price Range"
-  categoryId    Int // หมวดหมู่ที่ตัวกรองนี้เกี่ยวข้อง
+  name          String
+  categoryId    Int
   category      Category        @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-  options       FilterOption[] // ตัวเลือกสำหรับตัวกรองนี้
+  options       FilterOption[]
   createdAt     DateTime        @default(now())
   updatedAt     DateTime        @updatedAt
   ProductFilter ProductFilter[]
@@ -97,8 +97,8 @@ model ProductFilter {
 
 model FilterOption {
   id            Int             @id @default(autoincrement())
-  value         String // ค่าของตัวเลือก เช่น "Apple", "Under $500"
-  filterId      Int // ตัวกรองที่ตัวเลือกนี้เกี่ยวข้อง
+  value         String
+  filterId      Int
   filter        Filter          @relation(fields: [filterId], references: [id], onDelete: Cascade)
   createdAt     DateTime        @default(now())
   updatedAt     DateTime        @updatedAt
