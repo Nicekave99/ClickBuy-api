@@ -1,100 +1,99 @@
 const prisma = require("../config/prisma");
 
-// สร้างตัวกรองใหม่ในหมวดหมู่
-exports.createFilter = async (req, res) => {
-  const { name, categoryId, options } = req.body;
+// สร้างตัวกรองใหม่
+exports.create = async (req, res) => {
   try {
-    console.log("Request Body:", req.body); // ตรวจสอบข้อมูลที่ได้รับ
+    const { name, categoryId, options } = req.body;
     const filter = await prisma.filter.create({
       data: {
         name,
-        categoryId: parseInt(categoryId), // ตรวจสอบว่า categoryId ถูกส่งมาในรูปแบบที่ถูกต้อง
+        categoryId: Number(categoryId),
         options: {
-          create: options.map((value) => ({ value })), // สร้างตัวเลือก (Filter Options)
+          create: options.map((value) => ({ value })),
         },
       },
       include: { options: true },
     });
-    res.status(201).json(filter);
-  } catch (error) {
-    console.error("Error creating filter:", error); // พิมพ์ข้อผิดพลาดเพื่อช่วยวิเคราะห์
-    res.status(500).json({ error: "Failed to create filter" });
+    res.send(filter);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Server error" });
   }
 };
 
 // ดึงตัวกรองทั้งหมดในหมวดหมู่
-exports.getFiltersByCategory = async (req, res) => {
-  const { categoryId } = req.params;
+exports.list = async (req, res) => {
   try {
+    const { categoryId } = req.params;
     const filters = await prisma.filter.findMany({
-      where: { categoryId: parseInt(categoryId) },
+      where: { categoryId: Number(categoryId) },
       include: { options: true },
     });
-    res.status(200).json(filters);
-  } catch (error) {
-    console.error("Error fetching filters:", error);
-    res.status(500).json({ error: "Failed to fetch filters" });
+    res.send(filters);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
 // อัปเดตตัวกรอง
-exports.updateFilter = async (req, res) => {
-  const { id } = req.params;
-  const { name } = req.body;
+exports.update = async (req, res) => {
   try {
-    const updatedFilter = await prisma.filter.update({
-      where: { id: parseInt(id) },
+    const { id } = req.params;
+    const { name } = req.body;
+    const filter = await prisma.filter.update({
+      where: { id: Number(id) },
       data: { name },
     });
-    res.status(200).json(updatedFilter);
-  } catch (error) {
-    console.error("Error updating filter:", error);
-    res.status(500).json({ error: "Failed to update filter" });
+    res.send(filter);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
 // ลบตัวกรอง
-exports.deleteFilter = async (req, res) => {
-  const { id } = req.params;
+exports.remove = async (req, res) => {
   try {
-    await prisma.filter.delete({
-      where: { id: parseInt(id) },
+    const { id } = req.params;
+    const filter = await prisma.filter.delete({
+      where: { id: Number(id) },
     });
-    res.status(204).send();
-  } catch (error) {
-    console.error("Error deleting filter:", error);
-    res.status(500).json({ error: "Failed to delete filter" });
+    res.send(filter);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
 // เพิ่มตัวเลือกในตัวกรอง
-exports.addFilterOption = async (req, res) => {
-  const { filterId } = req.params;
-  const { value } = req.body;
+exports.addOption = async (req, res) => {
   try {
+    const { filterId } = req.params;
+    const { value } = req.body;
     const option = await prisma.filterOption.create({
       data: {
         value,
-        filterId: parseInt(filterId),
+        filterId: Number(filterId),
       },
     });
-    res.status(201).json(option);
-  } catch (error) {
-    console.error("Error adding filter option:", error);
-    res.status(500).json({ error: "Failed to add filter option" });
+    res.send(option);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
 // ลบตัวเลือกในตัวกรอง
-exports.removeFilterOption = async (req, res) => {
-  const { id } = req.params;
+exports.removeOption = async (req, res) => {
   try {
-    await prisma.filterOption.delete({
-      where: { id: parseInt(id) },
+    const { id } = req.params;
+    const option = await prisma.filterOption.delete({
+      where: { id: Number(id) },
     });
-    res.status(204).send();
-  } catch (error) {
-    console.error("Error deleting filter option:", error);
-    res.status(500).json({ error: "Failed to delete filter option" });
+    res.send(option);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };

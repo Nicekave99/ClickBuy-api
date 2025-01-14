@@ -1,26 +1,20 @@
 const express = require("express");
 const router = express.Router();
 const {
-  createFilter,
-  getFiltersByCategory,
-  updateFilter,
-  deleteFilter,
-  addFilterOption,
-  removeFilterOption,
+  create,
+  list,
+  update,
+  remove,
+  addOption,
+  removeOption,
 } = require("../controllers/FiltersControllers");
-const { authCheck, adminCheck } = require("../middlewares/authCheck");
 
 // @endpoint https://clickbuy-api.vercel.app/api/filters
-router.post("/filters", createFilter); // สร้างตัวกรองใหม่
-router.get("/filters/:categoryId", getFiltersByCategory); // ดึงตัวกรองของหมวดหมู่
-router.put("/filters/:id", authCheck, adminCheck, updateFilter); // อัปเดตตัวกรอง
-router.delete("/filters/:id", authCheck, adminCheck, deleteFilter); // ลบตัวกรอง
-router.post(
-  "/filters/:filterId/option",
-  authCheck,
-  adminCheck,
-  addFilterOption
-); // เพิ่มตัวเลือกในตัวกรอง
-router.delete("/filters/option/:id", authCheck, adminCheck, removeFilterOption); // ลบตัวเลือกในตัวกรอง
+router.post("/filters", create); // สร้างตัวกรองใหม่
+router.get("/filters/:categoryId", list); // ดึงตัวกรองทั้งหมดในหมวดหมู่
+router.put("/filters/:id", update); // อัปเดตตัวกรอง
+router.delete("/filters/:id", remove); // ลบตัวกรอง
+router.post("/filters/:filterId/option", addOption); // เพิ่มตัวเลือกในตัวกรอง
+router.delete("/filters/option/:id", removeOption); // ลบตัวเลือกในตัวกรอง
 
 module.exports = router;
