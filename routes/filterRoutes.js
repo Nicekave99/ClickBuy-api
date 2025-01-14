@@ -7,7 +7,7 @@ const {
   deleteFilter,
   addFilterOption,
   removeFilterOption,
-} = require("../controllers/filterController");
+} = require("../controllers/FiltersControllers");
 const { authCheck, adminCheck } = require("../middlewares/authCheck");
 
 // @endpoint https://clickbuy-api.vercel.app/api/filters
