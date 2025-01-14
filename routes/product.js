@@ -12,6 +12,7 @@ const {
   createImages,
   removeImage,
   searchProducts,
+  updateProductFilter,
 } = require("../controllers/product");
 const { adminCheck, authCheck } = require("../middlewares/authCheck");
 //@ENDPOINT https://clickbuy-api.vercel.app/api/product
@@ -23,6 +24,7 @@ router.delete("/product/:id", remove);
 router.post("/productby", listby);
 router.post("/search/filters", searchFilters);
 router.get("/products/search/:keyword", searchProducts);
+router.put("/product/filter", authCheck, adminCheck, updateProductFilter);
 
 router.post("/images", authCheck, adminCheck, createImages);
 router.post("/removeimages", authCheck, adminCheck, removeImage);

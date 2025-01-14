@@ -317,3 +317,17 @@ exports.searchProducts = async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
+exports.updateProductFilter = async (req, res) => {
+  try {
+    const { productId, filterId } = req.body;
+    const product = await prisma.product.update({
+      where: { id: Number(productId) },
+      data: { filterId: Number(filterId) },
+    });
+    res.status(200).json(product);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};

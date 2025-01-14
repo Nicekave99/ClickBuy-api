@@ -24,20 +24,21 @@ model User {
 }
 
 model Product {
-  id          Int               @id @default(autoincrement())
+  id          Int              @id @default(autoincrement())
   title       String
   description String
   price       Float
-  sold        Int               @default(0)
+  sold        Int              @default(0)
   quantity    Int
-  createdAt   DateTime          @default(now())
-  updatedAt   DateTime          @updatedAt
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
   categoryId  Int?
   images      Image[]
-  category    Category?         @relation(fields: [categoryId], references: [id])
+  category    Category?        @relation(fields: [categoryId], references: [id])
+  filterId    Int?
+  filter      Filter?          @relation(fields: [filterId], references: [id])
   cartItems   ProductOnCart[]
   orderItems  ProductOnOrder[]
-  filters     FilterOnProduct[]
 }
 
 model Order {
@@ -69,25 +70,17 @@ model Category {
   id        Int       @id @default(autoincrement())
   name      String
   products  Product[]
-  filters   Filter[]
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
+  filters   Filter[]
 }
 
 model Filter {
-  id         Int               @id @default(autoincrement())
+  id         Int       @id @default(autoincrement())
   name       String
   categoryId Int
-  category   Category          @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-  products   FilterOnProduct[]
-}
-
-model FilterOnProduct {
-  id        Int     @id @default(autoincrement())
-  filterId  Int
-  productId Int
-  filter    Filter  @relation(fields: [filterId], references: [id], onDelete: Cascade)
-  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  category   Category  @relation(fields: [categoryId], references: [id])
+  products   Product[]
 }
 
 model Cart {
