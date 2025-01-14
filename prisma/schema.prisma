@@ -37,7 +37,6 @@ model Product {
   category    Category?        @relation(fields: [categoryId], references: [id])
   cartItems   ProductOnCart[]
   orderItems  ProductOnOrder[]
-  filters     ProductFilter[] // เก็บค่าตัวเลือกของฟิลเตอร์ที่สินค้าเลือก
 }
 
 model Order {
@@ -65,11 +64,21 @@ model ProductOnOrder {
   product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 }
 
+model Filter {
+  id         Int      @id @default(autoincrement())
+  name       String
+  type       String
+  category   Category @relation(fields: [categoryId], references: [id])
+  categoryId Int
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
 model Category {
   id        Int       @id @default(autoincrement())
   name      String
   products  Product[]
-  filters   Filter[] // ตัวกรองที่เกี่ยวข้องกับหมวดหมู่นี้
+  filters   Filter[]
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 }
@@ -104,35 +113,4 @@ model Image {
   updatedAt  DateTime @updatedAt
   productId  Int
   product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
-}
-
-model Filter {
-  id            Int             @id @default(autoincrement())
-  name          String // ชื่อของตัวกรอง เช่น "Brand", "Price Range"
-  categoryId    Int // หมวดหมู่ที่ตัวกรองนี้เกี่ยวข้อง
-  category      Category        @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-  options       FilterOption[] // ตัวเลือกสำหรับตัวกรองนี้
-  createdAt     DateTime        @default(now())
-  updatedAt     DateTime        @updatedAt
-  ProductFilter ProductFilter[]
-}
-
-model FilterOption {
-  id            Int             @id @default(autoincrement())
-  value         String // ค่าของตัวเลือก เช่น "Apple", "Under $500"
-  filterId      Int // ตัวกรองที่ตัวเลือกนี้เกี่ยวข้อง
-  filter        Filter          @relation(fields: [filterId], references: [id], onDelete: Cascade)
-  createdAt     DateTime        @default(now())
-  updatedAt     DateTime        @updatedAt
-  ProductFilter ProductFilter[]
-}
-
-model ProductFilter {
-  id        Int          @id @default(autoincrement())
-  productId Int
-  filterId  Int
-  optionId  Int
-  product   Product      @relation(fields: [productId], references: [id], onDelete: Cascade)
-  filter    Filter       @relation(fields: [filterId], references: [id], onDelete: Cascade)
-  option    FilterOption @relation(fields: [optionId], references: [id], onDelete: Cascade)
 }
