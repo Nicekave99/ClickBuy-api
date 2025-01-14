@@ -4,19 +4,20 @@ const prisma = require("../config/prisma");
 exports.createFilter = async (req, res) => {
   const { name, categoryId, options } = req.body;
   try {
+    console.log("Request Body:", req.body); // ตรวจสอบข้อมูลที่ได้รับ
     const filter = await prisma.filter.create({
       data: {
         name,
-        categoryId,
+        categoryId: parseInt(categoryId), // ตรวจสอบว่า categoryId ถูกส่งมาในรูปแบบที่ถูกต้อง
         options: {
-          create: options.map((value) => ({ value })),
+          create: options.map((value) => ({ value })), // สร้างตัวเลือก (Filter Options)
         },
       },
       include: { options: true },
     });
     res.status(201).json(filter);
   } catch (error) {
-    console.error("Error creating filter:", error);
+    console.error("Error creating filter:", error); // พิมพ์ข้อผิดพลาดเพื่อช่วยวิเคราะห์
     res.status(500).json({ error: "Failed to create filter" });
   }
 };
