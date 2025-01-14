@@ -11,7 +11,7 @@ const {
 const { authCheck, adminCheck } = require("../middlewares/authCheck");
 
 // @endpoint https://clickbuy-api.vercel.app/api/filters
-router.post("/filters", authCheck, adminCheck, createFilter); // สร้างตัวกรองใหม่
+router.post("/filters", createFilter); // สร้างตัวกรองใหม่
 router.get("/filters/:categoryId", getFiltersByCategory); // ดึงตัวกรองของหมวดหมู่
 router.put("/filters/:id", authCheck, adminCheck, updateFilter); // อัปเดตตัวกรอง
 router.delete("/filters/:id", authCheck, adminCheck, deleteFilter); // ลบตัวกรอง
