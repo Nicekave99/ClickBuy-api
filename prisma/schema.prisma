@@ -64,21 +64,10 @@ model ProductOnOrder {
   product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 }
 
-model Filter {
-  id         Int      @id @default(autoincrement())
-  name       String
-  type       String
-  category   Category @relation(fields: [categoryId], references: [id])
-  categoryId Int
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-}
-
 model Category {
   id        Int       @id @default(autoincrement())
   name      String
   products  Product[]
-  filters   Filter[]
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 }
