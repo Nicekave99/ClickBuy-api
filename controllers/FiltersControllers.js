@@ -3,11 +3,10 @@ const prisma = require("../config/prisma");
 // สร้างตัวกรองใหม่
 exports.create = async (req, res) => {
   try {
-    const { name, categoryId, options } = req.body;
+    const { name, options } = req.body;
     const filter = await prisma.filter.create({
       data: {
-        name,
-        categoryId: Number(categoryId),
+        name: name,
         options: {
           create: options.map((value) => ({ value })),
         },
@@ -24,11 +23,7 @@ exports.create = async (req, res) => {
 // ดึงตัวกรองทั้งหมดในหมวดหมู่
 exports.list = async (req, res) => {
   try {
-    const { categoryId } = req.params;
-    const filters = await prisma.filter.findMany({
-      where: { categoryId: Number(categoryId) },
-      include: { options: true },
-    });
+    const filters = await prisma.filter.findMany();
     res.send(filters);
   } catch (err) {
     console.log(err);
